@@ -1,0 +1,445 @@
+/* ==========================================================================
+   TAPLAI — WEUP design language
+   Tokens đo trực tiếp từ https://weup.edu.vn/ (2026-11-04):
+     navy #00203F (hero/footer/header), tile #06305A, brand red #990011,
+     surface #F7F8FA / #EEF2F6, text #1F2933, muted #52606D, border #CBD2D9,
+     CTA pill radius 999px + shadow rgba(153,0,17,.35) 0 10px 30px,
+     card radius 22px, serif Fraunces (headings) + Be Vietnam Pro (UI/body).
+   Nạp SAU main.css. Không sửa main.css để còn rollback được.
+   ========================================================================== */
+
+/* ---- fonts ---- */
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-400-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-400-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-400-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-500-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-500-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-500-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-600-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-600-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-600-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-700-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-700-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/weup/BeVietnamPro-700-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-400-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-400-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-400-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-500-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-500-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-500-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-600-normal-viet.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-600-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/weup/Fraunces-600-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* ---- fonts (self-hosted, vietnamese subset) ---- */
+
+
+/* ---- token remap ---- */
+:root{
+  --brand:#990011;
+  --brand-hover:#7A000E;
+  --brand-soft:#FBEAEC;
+  --on-brand:#FFFFFF;
+
+  --ink:#00203F;
+  --ink-2:#06305A;
+  --on-ink:#FFFFFF;
+
+  --accent:#0B3A6E;
+  --accent-hover:#00203F;
+
+  --surface:#F7F8FA;
+  --card:#FFFFFF;
+  --border:#CBD2D9;
+  --text:#1F2933;
+  --text-muted:#52606D;
+
+  --ok:#1E8E3E;
+  --ok-soft:#E6F4EA;
+  --warn:#B8860B;
+  --warn-soft:#FDF3DC;
+  --danger:#B3261E;
+  --danger-soft:#FCE8E6;
+
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:22px;
+  --r-pill:999px;
+
+  --sh-1:0 1px 2px rgba(0,32,63,.05), 0 2px 8px rgba(0,32,63,.06);
+  --sh-2:0 6px 18px rgba(0,32,63,.10);
+  --sh-3:0 12px 34px rgba(0,32,63,.16);
+  --cta-shadow:0 10px 30px rgba(153,0,17,.35);
+  --cta-shadow-hover:0 14px 34px rgba(153,0,17,.42);
+
+  --font-head:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-body:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-serif:'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+/* ---- typography: serif = brand voice, sans = UI ---- */
+body{
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.5;
+  color:var(--text);
+  background:var(--surface);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,h5{
+  font-family:var(--font-serif);
+  font-weight:400;
+  letter-spacing:-.005em;
+  color:var(--ink);
+}
+h1{line-height:1.06}
+h2{line-height:1.14}
+h3{line-height:1.2}
+h4,h5{font-family:var(--font-body);font-weight:600;letter-spacing:0}
+.eyebrow,.section-label,.share-label,.lead-inline__title,.fld label,.form-field label{
+  font-family:var(--font-body);
+  font-weight:600;
+  letter-spacing:.08em;
+}
+/* nội dung câu hỏi / đáp án giữ sans để đọc nhanh */
+.qcard h2,.question-body h2,.learn-qcard__body h2,.question_content,.question_txt,
+.opt,.opt-list,.answer-Y,.answer-N,.qcard__body{font-family:var(--font-body);letter-spacing:0}
+.qcard h2,.question-body h2{font-weight:600;line-height:1.4;font-size:17px}
+
+/* ---- header / nav ---- */
+.site-header{
+  background:var(--ink);
+  box-shadow:none;
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+.main-nav>a,.nav-item>a{color:rgba(255,255,255,.82);font-weight:500}
+.main-nav>a:hover,.nav-item>a:hover{color:#fff}
+.nav-sub a,.nav-drawer__links a{color:rgba(255,255,255,.82)}
+.hang-chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);color:#fff;border-radius:var(--r-pill)}
+
+/* ---- hero / dark surfaces ---- */
+.page-hero{background:linear-gradient(160deg,var(--ink) 0%,var(--ink-2) 100%)}
+.page-hero .mark{color:#fff}
+.page-hero .rating-block{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+.page-hero .rating-block>.info{color:rgba(255,255,255,.75)}
+.hero,.home-hero,.hero-block{background:linear-gradient(160deg,var(--ink) 0%,var(--ink-2) 100%)}
+
+/* ---- buttons: WEUP pill CTA ---- */
+.btn{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:0;
+  border-radius:var(--r-pill);
+  min-height:46px;
+  padding:0 22px;
+}
+.btn--lg{min-height:56px;padding:0 30px;font-size:15px}
+.btn--sm{min-height:34px;padding:0 14px;font-size:13px}
+.btn--primary{
+  background:var(--brand);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:var(--cta-shadow);
+}
+.btn--primary:hover{
+  background:var(--brand-hover);
+  color:#fff;
+  box-shadow:var(--cta-shadow-hover);
+  transform:translateY(-1px);
+}
+.btn--accent{background:var(--ink);color:#fff;border-color:transparent}
+.btn--accent:hover{background:var(--ink-2);color:#fff}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--border)}
+.btn--ghost:hover{background:#fff;border-color:var(--ink);color:var(--ink)}
+/* ghost nằm trên nền tối -> kiểu "Xem khóa học" của WEUP */
+.page-hero .btn--ghost,.hero .btn--ghost,.home-hero .btn--ghost,.hero-block .btn--ghost{
+  background:rgba(255,255,255,.1);
+  border-color:rgba(255,255,255,.35);
+  color:#fff;
+}
+.page-hero .btn--ghost:hover,.hero .btn--ghost:hover,.home-hero .btn--ghost:hover{
+  background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.5);
+}
+.btn2{border-radius:var(--r-pill)}
+.btn2.active{background:var(--brand)!important;border-color:var(--brand)!important;color:#fff!important}
+
+/* ---- chips / badges: đỏ trên nền hồng nhạt (bỏ tông vàng cũ) ---- */
+.mark,.title__mark{color:var(--brand)}
+.badge--brand,.set-600{background:var(--brand-soft);color:var(--brand)}
+.set-250{background:#E7EDF4;color:var(--ink)}
+.badge--warn,.dlg__badge--amber{background:var(--warn-soft);color:var(--warn)}
+.result-link--donate{color:var(--brand)}
+.result-link--donate:hover{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+.dlg__badge--blue{background:#E7EDF4;color:var(--ink);border-color:#CBD2D9}
+
+/* ---- cards ---- */
+.card,.qcard,.learn-qcard,.panel,.box{border-radius:var(--r-lg)}
+.card{border-color:var(--border);box-shadow:var(--sh-1)}
+.card:hover{box-shadow:var(--sh-2)}
+.opt{border-radius:var(--r-md)}
+.opt.is-selected,.opt.answer-Y.is-selected{border-color:var(--brand)}
+.qb-cell,.q-sdot{border-radius:8px}
+
+/* ---- learn sidebar / progress ---- */
+.learn-sidebar__item,.learn-sidebar__item-row{border-radius:var(--r-md)}
+.learn-sidebar__bar-fill,#progressFill,.q-progress__fill{background:var(--brand)}
+.learn-filter-btn{border-radius:var(--r-pill)}
+.learn-filter-btn.is-active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+/* ---- exam chrome ---- */
+.timer__time{color:var(--ink)}
+.timer__time.is-low{color:var(--danger)}
+.question.is-liet,.question_liet{color:var(--danger)}
+
+/* ---- footer ---- */
+.site-footer{background:var(--ink);color:rgba(255,255,255,.72)}
+.footer-grid a,.footer-bottom a{color:rgba(255,255,255,.72)}
+.footer-grid a:hover,.footer-bottom a:hover{color:#fff}
+.footer-bottom{border-top-color:rgba(255,255,255,.14)}
+.footer-social a{background:rgba(255,255,255,.1);color:#fff}
+.crumbs,.crumbs a{color:var(--text-muted)}
+
+/* ---- forms ---- */
+.fld input,.fld select,.fld textarea,.form-field input,.form-field select,.form-field textarea{
+  border-radius:var(--r-md);
+  border-color:var(--border);
+}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(153,0,17,.12)}
+
+/* ---- dọn tàn dư vàng hard-code trong main.css (rgba 245,197,24) ---- */
+.main-nav>a.nav-donate{color:#fff;border-color:rgba(255,255,255,.45)}
+.main-nav>a.nav-donate:hover{background:rgba(255,255,255,.12);border-color:#fff;color:#fff}
+.hang-chip:hover,.hang-chip:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5);color:#fff}
+.footer-social a:hover{background:rgba(255,255,255,.2);color:#fff}
+.question-body blockquote a.choice{border-color:var(--brand);background:var(--brand-soft);color:var(--ink)}
+.change-panel__badge{background:var(--brand-soft);border-color:rgba(153,0,17,.35);color:var(--brand)}
+.compare-card--keep{border-color:rgba(153,0,17,.35);background:rgba(153,0,17,.05)}
+
+/* ---- FAB hỗ trợ: đỏ WEUP thay cho xanh Facebook ---- */
+.support-fab{background:var(--brand)!important;color:#fff!important;box-shadow:var(--cta-shadow)!important}
+.support-fab:hover{background:var(--brand-hover)!important}
+
+/* ---- accent text trên nền tối: dùng hồng nhạt của WEUP (#FF8A96) ----
+   #990011 trên #00203F chỉ ~2.2:1, không đạt AA cho text nhỏ. */
+.page-hero .eyebrow,.hero .eyebrow,.home-hero .eyebrow,.hero-block .eyebrow,
+.page-hero .mark,.hero .mark{color:#FF8A96}
+.page-hero .eyebrow,.hero .eyebrow{font-weight:600;letter-spacing:.1em}
+
+/* ---- hero: eyebrow + số liệu + badge hạng (đang nằm trong CSS scoped của Blazor
+   nên phải !important mới thắng được) ---- */
+.hero__tag{color:#FF8A96 !important;font-weight:600;letter-spacing:.12em}
+.stat-strip__num{color:#fff !important;font-family:var(--font-serif) !important;font-weight:400 !important;letter-spacing:-.01em}
+.stat-strip__label,.stat-strip__unit{color:rgba(255,255,255,.72) !important}
+.hero .set-badge,.qpick .set-badge{background:rgba(255,255,255,.12) !important;color:#fff !important;border:1px solid rgba(255,255,255,.22)}
+.hero__card,.qpick{background:rgba(255,255,255,.06) !important;border-color:rgba(255,255,255,.16) !important;border-radius:var(--r-lg) !important}
+
+/* ---- hierarchy: badge đếm câu là metadata (viền mảnh), CTA trong card là secondary
+   để chỉ còn MỘT nút đỏ chính trong hero (đúng luật "one primary action per view") ---- */
+.hero .set-badge,.qpick .set-badge{
+  background:transparent !important;
+  color:#FF8A96 !important;
+  border:1px solid rgba(255,255,255,.24) !important;
+  font-weight:600;
+}
+.qpick .btn--primary{
+  background:rgba(255,255,255,.1) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.35) !important;
+  box-shadow:none !important;
+}
+.qpick .btn--primary:hover{background:rgba(255,255,255,.18) !important;border-color:rgba(255,255,255,.5) !important}
+
+/* ---- link & nút trên nền tối: dùng hồng nhạt, không dùng đỏ đậm (#990011 ~1.9:1) ---- */
+.page-hero a:not(.btn),.hero a:not(.btn){color:#FF8A96}
+.page-hero a:not(.btn):hover,.hero a:not(.btn):hover{color:#fff}
+/* nút "Bắt đầu thi" trong dialog đang xanh lá (--ok) -> đỏ thương hiệu */
+.dlg-btn--ok{background:var(--brand)!important;border-color:var(--brand)!important;color:#fff!important}
+.dlg-btn--ok:hover{background:var(--brand-hover)!important;border-color:var(--brand-hover)!important}
+
+/* ---- dark hero surfaces: .page-hero, .learn-hero, .sim-hero, .intro-hero, .hero
+   Mọi text nhấn màu đỏ đậm (#990011) trên nền navy chỉ đạt 1.85:1 -> dùng #FF8A96 (7.3:1). ---- */
+.hero .mark,.page-hero .mark,.learn-hero .mark,.sim-hero .mark,.intro-hero .mark{color:#FF8A96}
+.hero-stat__num,.hero .hero-stat__num,.page-hero .hero-stat__num,
+.learn-hero .hero-stat__num,.sim-hero .hero-stat__num{color:#FF8A96 !important}
+.hero a:not(.btn),.page-hero a:not(.btn),.learn-hero a:not(.btn),.sim-hero a:not(.btn),.intro-hero a:not(.btn){color:#FF8A96}
+.hero a:not(.btn):hover,.page-hero a:not(.btn):hover,.learn-hero a:not(.btn):hover,
+.sim-hero a:not(.btn):hover,.intro-hero a:not(.btn):hover{color:#fff}
+.nav-drawer__donate{color:#FF8A96 !important}
+/* chip đếm câu trong strip chương: nền đỏ + chữ navy = 1.85:1 -> chữ trắng */
+.ch-strip-count{background:var(--brand) !important;color:#fff !important}
+
+/* ---- vòng cuối: các chỗ selector gốc đặc thù hơn ---- */
+.learn-hero .mark,.learn-hero h1 .mark,.page-hero h1 .mark,.sim-hero h1 .mark{color:#FF8A96 !important}
+.question.active,.question.is-active{color:#fff !important}
+.toast,.alert,.notice{color:var(--ink)}
+
+/* ---- badge cảnh báo & đồng hồ thi: text vàng/đỏ trên nền tối không đạt AA ---- */
+.badge--warn{background:#FDF3DC !important;color:#6B4E00 !important}
+.board-timer__time,.board-compact__timer,.timer__time{color:#FF8A96 !important}
+.board-timer__label,.board-title,.board-compact__label{color:rgba(255,255,255,.85) !important}
+.toast,.notice,.alert-success{color:#12332A}
+
+/* ---- nút nền tối: chữ phải trắng; legend chữ mờ 11px không đạt AA ---- */
+.btn:not(.btn--ghost):not(.btn-cancel):not(.btn2){color:#fff}
+.bl-item{color:rgba(255,255,255,.88) !important}
+
+/* ---- "điểm liệt": dùng vàng trong bảng màu WEUP (#F2B544) thay vì amber đậm;
+   ô đang xem dùng đỏ thương hiệu thay vì vàng ---- */
+.q-sdot.liet,.qb-liet,.bl-dot{background:#F2B544 !important;border-color:#F2B544 !important;color:#3A2A00 !important}
+.dlg__badge--amber{background:#FDF3DC !important;color:#6B4E00 !important;border-color:#F2B544 !important}
+.dlg__icon{background:#FDF3DC !important;color:#6B4E00 !important}
+.qb-cell.is-cur,.q-sdot.is-cur,.qb-cell.is-current{background:var(--brand) !important;border-color:var(--brand) !important;color:#fff !important}
+
+/* ---- "đang xem" không dùng đỏ (trùng nghĩa với "đã sai"): sidebar -> navy,
+   ô bảng câu hỏi trên nền tối -> nền trắng chữ navy ---- */
+.question.active,.learn-sidebar__item.is-active{background:var(--ink) !important;color:#fff !important;border-color:var(--ink) !important}
+.qb-cell.is-cur,.q-sdot.is-cur,.qb-cell.is-current{background:#fff !important;color:var(--ink) !important;border-color:#fff !important}

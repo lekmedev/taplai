@@ -1,0 +1,15 @@
+# Không commit nội dung mirror (425 MB, bản quyền nội dung thuộc taplaixe.vn)
+www/
+
+# Log runtime
+logs/
+*.log
+
+# Backup sinh ra trong lúc vận hành
+*.tgz
+conf/*.bak.*
+services.yaml.bak.*
+
+# OS / editor
+.DS_Store
+*.swp
