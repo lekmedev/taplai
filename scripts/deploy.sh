@@ -1,19 +1,41 @@
 #!/bin/bash
-# Dựng lại taplai.8biz.net từ repo này trên creek.
-# Repo KHÔNG chứa nội dung mirror (www/) — phải mirror trước, xem HANDOFF.md §6–§7.
-# Script này áp overlay/ (theme WEUP, logo, font, clone-exam-start.js) lên nội dung đã mirror
-# rồi dựng container và verify.
+# Dựng lại taplai.8biz.net trên creek từ repo này.
+#
+# Nội dung mirror (425 MB) KHÔNG nằm trong git — nó là asset của GitHub Release "v1".
+# Script này: tải + giải nén asset nếu thiếu www/ → áp overlay (theme/logo/font) → dựng container → verify.
+#
+#   bash scripts/deploy.sh            # dựng / cập nhật
+#   SKIP_DOWNLOAD=1 bash scripts/deploy.sh   # chỉ áp overlay + restart (khi www/ đã có)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+REPO="lekmedev/taplai"
+ASSET="taplai-site-content-v1.tar.gz"
+SHA256="8a5e34efb2ff0a396ce191c7125c955180214f45661f23615a9eae60eda03e94"
+
 if [ ! -d www/taplaixe.vn ]; then
-  echo "THIẾU www/taplaixe.vn — mirror nội dung trước (HANDOFF.md §6–§7: wget → fetch_de.sh → fetch_frag.sh → fetch_missing.py → norm.py --apply → inject.py)"
-  exit 1
+  if [ "${SKIP_DOWNLOAD:-0}" = "1" ]; then
+    echo "THIẾU www/taplaixe.vn và SKIP_DOWNLOAD=1 — dừng."
+    exit 1
+  fi
+  echo "== tải nội dung từ GitHub Release v1 (~390 MB) =="
+  mkdir -p www
+  URL="https://github.com/$REPO/releases/download/v1/$ASSET"
+  if command -v gh >/dev/null 2>&1; then
+    gh release download v1 --repo "$REPO" --pattern "$ASSET" --dir /tmp --clobber
+    mv "/tmp/$ASSET" /tmp/site.tar.gz
+  else
+    curl -L --fail -o /tmp/site.tar.gz "$URL"
+  fi
+  echo "== kiểm tra sha256 =="
+  echo "$SHA256  /tmp/site.tar.gz" | sha256sum -c -
+  echo "== giải nén =="
+  tar -C www -xzf /tmp/site.tar.gz
+  rm -f /tmp/site.tar.gz
 fi
 
-echo "== áp overlay (theme/logo/font/script) =="
+echo "== áp overlay (theme WEUP, logo, font, clone-exam-start.js) =="
 cp -r overlay/assets/. www/taplaixe.vn/assets/
-# chèn link theme + script exam-start nếu chưa có
 python3 scripts/inject_theme.py 2>/dev/null || true
 python3 scripts/inject.py 2>/dev/null || true
 

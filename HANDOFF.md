@@ -204,6 +204,9 @@ Và `Emulation.setDeviceMetricsOverride` còn hiệu lực cho mọi screenshot 
 1. ~~**Git repo**~~ **ĐÃ XONG 2026-11-04** → https://github.com/lekmedev/taplai (public, branch `main`).
    Repo chứa `conf/`, `scripts/`, `overlay/` (theme WEUP + logo + font + clone-exam-start.js), `README.md`,
    `HANDOFF.md`, `docker-compose.yml`; `www/`, `logs/`, `*.tgz`, `conf/*.bak.*` bị ignore.
+   **Nội dung mirror phát hành dạng asset của Release `v1`** (390 MB, `taplai-site-content-v1.tar.gz`,
+   sha256 `8a5e34ef…3e94`); `scripts/deploy.sh` tự tải + verify + giải nén khi thiếu `www/`.
+   Dựng lại ở máy mới: `git clone … && bash scripts/deploy.sh`.
    Push: `git -C ~/apps/taplai push` (remote SSH, account `lekmedev`).
    Khi sửa theme: sửa `overlay/assets/styles/weup-theme.css` (nguồn sự thật trong repo) → copy sang
    `www/...` → bump `?v=` → commit.

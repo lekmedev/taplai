@@ -1,4 +1,4 @@
-# Không commit nội dung mirror (425 MB, bản quyền nội dung thuộc taplaixe.vn)
+# Nội dung mirror KHÔNG commit — phát hành dạng asset của GitHub Release (xem scripts/deploy.sh)
 www/
 
 # Log runtime

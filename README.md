@@ -88,12 +88,24 @@ Sửa theme: edit `weup-theme.css` → scp → **bump ?v=N** trên mọi link we
 
 ## Repo này chứa gì
 
-Repo là **cấu hình + quy trình**, KHÔNG chứa nội dung mirror (425 MB, nội dung thuộc bản quyền taplaixe.vn).
+Repo là **cấu hình + quy trình**; **nội dung mirror (425 MB) phát hành dạng asset của GitHub Release `v1`**
+(không commit vào git — repo nhẹ, clone nhanh, và nội dung thuộc bản quyền taplaixe.vn).
 
-| Có trong repo | Không có (sinh ra khi deploy) |
-|---|---|
-| `docker-compose.yml`, `conf/default.conf` | `www/taplaixe.vn/` — toàn bộ nội dung mirror |
-| `scripts/` (mirror, normalize, theme, fetch) + `overlay/` (theme WEUP, logo, font, clone-exam-start.js) | `logs/`, `*.tgz` backup, `conf/*.bak.*` |
-| `README.md`, `HANDOFF.md` | |
+| Trong git | Ở GitHub Release `v1` | Sinh ra khi chạy |
+|---|---|---|
+| `docker-compose.yml`, `conf/default.conf` | `taplai-site-content-v1.tar.gz` (390 MB) | `www/taplaixe.vn/` (giải nén từ asset) |
+| `scripts/` (mirror, normalize, theme, fetch, deploy) | ↳ 1451 HTML + 120 video + 659 ảnh + font | `logs/`, `conf/*.bak.*` |
+| `overlay/` (theme WEUP, logo, font, clone-exam-start.js) | | |
+| `README.md`, `HANDOFF.md` | | |
 
-Dựng lại từ đầu: mirror nội dung theo `HANDOFF.md` §6–§7 → `bash scripts/deploy.sh`.
+Dựng lại ở máy mới (2 lệnh):
+
+```bash
+git clone git@github.com:lekmedev/taplai.git && cd taplai
+bash scripts/deploy.sh      # tự tải + verify sha256 + giải nén asset v1, áp overlay, up container, verify
+```
+
+Nếu `www/` đã có (máy đang chạy): `SKIP_DOWNLOAD=1 bash scripts/deploy.sh` — chỉ áp overlay + restart.
+
+Asset: https://github.com/lekmedev/taplai/releases/download/v1/taplai-site-content-v1.tar.gz
+sha256 `8a5e34efb2ff0a396ce191c7125c955180214f45661f23615a9eae60eda03e94`
