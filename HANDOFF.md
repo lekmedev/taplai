@@ -201,8 +201,12 @@ Và `Emulation.setDeviceMetricsOverride` còn hiệu lực cho mọi screenshot 
 ## 9. TODO (việc còn lại, xếp theo giá trị)
 
 ### P1 — nên làm
-1. **Git repo**: `git init` trong `~/apps/taplai`, ignore `www/` (425 MB) và `logs/`, commit `conf/ scripts/ README HANDOFF compose`.
-   Lý do: hiện chỉ có 1 file tar backup HTML, không có lịch sử thay đổi conf/theme.
+1. ~~**Git repo**~~ **ĐÃ XONG 2026-11-04** → https://github.com/lekmedev/taplai (public, branch `main`).
+   Repo chứa `conf/`, `scripts/`, `overlay/` (theme WEUP + logo + font + clone-exam-start.js), `README.md`,
+   `HANDOFF.md`, `docker-compose.yml`; `www/`, `logs/`, `*.tgz`, `conf/*.bak.*` bị ignore.
+   Push: `git -C ~/apps/taplai push` (remote SSH, account `lekmedev`).
+   Khi sửa theme: sửa `overlay/assets/styles/weup-theme.css` (nguồn sự thật trong repo) → copy sang
+   `www/...` → bump `?v=` → commit.
 2. **Cron re-mirror** (nếu Marshal muốn nội dung tươi): script chạy `fetch_de.sh` + `fetch_frag.sh` +
    `fetch_missing.py` rồi reload; đề mới = chạy lại `fetch_de.sh` (nó bỏ qua file đã có, muốn đề mới
    thì xoá `*__de-*.html` của hạng đó trước). Chưa đặt lịch — **hỏi Marshal tần suất**.
