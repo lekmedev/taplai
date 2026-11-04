@@ -1,6 +1,7 @@
 # HANDOFF — taplai.8biz.net (static mirror của taplaixe.vn)
 
-> Viết 2026-11-04. Mục đích: bàn giao cho AI/người khác tiếp quản mà không cần hỏi lại.
+> Cập nhật lần cuối: **2026-11-04 22:50** (sau khi tạo repo GitHub + Release v1).
+> Mục đích: bàn giao cho AI/người khác tiếp quản mà không cần hỏi lại.
 > Đọc hết file này trước khi sửa bất cứ thứ gì. Phần **§9 TODO** là việc còn lại.
 
 ---
@@ -14,6 +15,8 @@
 - Đề thi "ngẫu nhiên" đã được **chụp sẵn thành 211 đề** (10–20 đề/hạng) và map qua query `?de=N`.
 - Giao diện đã port sang **design system của weup.edu.vn** (navy + đỏ, serif Fraunces) bằng **1 file override**.
 - Đã bóc sạch AdSense/GA4/reCAPTCHA của chủ gốc; không còn quảng cáo.
+- **Repo GitHub**: https://github.com/lekmedev/taplai (public, `main`) — 41 file, ~800 KB.
+  Nội dung mirror (425 MB) nằm ở **Release `v1`** (asset 390 MB), KHÔNG nằm trong git.
 
 ---
 
@@ -25,6 +28,9 @@
 | Tailnet | http://100.95.76.53:8090 |
 | Container | `taplai` (nginx:alpine), `restart: unless-stopped` |
 | Port | host `0.0.0.0:8090` → container `80` |
+| Repo GitHub | https://github.com/lekmedev/taplai (branch `main`, push bằng SSH account `lekmedev`) |
+| Release nội dung | https://github.com/lekmedev/taplai/releases/tag/v1 — asset `taplai-site-content-v1.tar.gz` (390,213,148 bytes) |
+| sha256 asset | `8a5e34efb2ff0a396ce191c7125c955180214f45661f23615a9eae60eda03e94` |
 | Compose | `~/apps/taplai/docker-compose.yml` |
 | Log | `docker logs taplai`; form POST → `~/apps/taplai/logs/forms.log` |
 | Dashboard card | dashboard.8biz.net → group "Public services" → "Taplai (luyện thi GPLX)" |
@@ -35,52 +41,63 @@ Lệnh thường dùng:
 ```bash
 ssh creek
 cd ~/apps/taplai
-docker compose restart                 # sau khi sửa conf/default.conf
+docker compose restart                 # sau khi sửa conf/default.conf (reload không đủ, xem §4 bẫy 2)
 docker exec taplai nginx -t && docker exec taplai nginx -s reload
 curl -s -o /dev/null -w '%{http_code}\n' https://taplai.8biz.net/
+git push                               # đẩy thay đổi repo (SSH, account lekmedev)
 ```
 
 ---
 
 ## 3. Bản đồ repo
 
+### Trên GitHub (`lekmedev/taplai` — những gì AI khác clone được)
+
+```
+taplai/                       # clone về chỉ có phần này (~800 KB)
+├── docker-compose.yml        # 1 service nginx, mount 3 volume (xem §4)
+├── README.md                 # cách dựng nhanh + BẢNG DESIGN TOKEN (§ "Design system (WEUP)")
+├── HANDOFF.md                # file này
+├── .gitignore                # ignore www/, logs/, *.tgz, conf/*.bak.*, services.yaml.bak.*
+├── conf/
+│   └── default.conf          # toàn bộ routing nginx (28 location) — nguồn sự thật của URL mapping
+├── scripts/                  # pipeline mirror + deploy (xem §7)
+│   └── deploy.sh             # ★ 1 lệnh dựng lại: tải Release v1 → sha256 → giải nén → overlay → up → verify
+└── overlay/                  # phần "của mình" áp lên nội dung mirror sau khi giải nén
+    └── assets/
+        ├── styles/weup-theme.css   # ★ NGUỒN SỰ THẬT của design WEUP (bản chạy ở www/ là bản copy)
+        ├── scripts/clone-exam-start.js
+        ├── images/logo.png, logo-square.png
+        └── fonts/weup/*.woff2 (21 file Fraunces + Be Vietnam Pro)
+```
+
+### Trên creek (`~/apps/taplai/`) — ngoài nội dung git còn có
+
 ```
 ~/apps/taplai/
-├── docker-compose.yml            # 1 service nginx, mount 3 volume (xem §4)
-├── README.md                     # hướng dẫn ngắn + BẢNG DESIGN TOKEN (§ "Design system (WEUP)")
-├── HANDOFF.md                    # file này
-├── www-html-backup-20261104-210036.tgz   # backup HTML/CSS/JS TRƯỚC khi normalize (5 MB, không có video/ảnh)
-├── conf/
-│   ├── default.conf              # toàn bộ routing nginx (28 location) — nguồn sự thật của URL mapping
-│   └── default.conf.bak.*        # backup trước các lần sửa
-├── logs/                         # access.log, error.log, forms.log (mount vào /var/log/nginx)
-├── scripts/                      # các script đã dùng để tạo mirror (xem §7)
-└── www/taplaixe.vn/              # WEB ROOT (mount read-only vào container)
-    ├── index.html                # trang chủ
-    ├── <42 file>.html            # trang cấp 1 (slug y như site gốc)
-    ├── bai-viet/ luyen-thi/      # 24 trang con (bài viết, landing hạng GPLX)
-    ├── *__de-<n>.html            # 211 đề thi chụp sẵn  ← map ?de=N
-    ├── *__dethi-<n>.html         # 15 đề mô phỏng      ← map ?dethi=N
-    ├── *__cau-hoi-<n>.html       # 1150 fragment AJAX  ← map ?cau-hoi=N
-    ├── *__chuyenmuc-<n>.html     # 3 chuyên mục bài viết
-    ├── *__hang-<X>.html          # 7 trang "đề chuẩn" theo hạng
-    ├── assets/
-    │   ├── styles/main.css       # CSS gốc của site (KHÔNG SỬA)
-    │   ├── styles/weup-theme.css # ★ TOÀN BỘ design WEUP nằm ở đây (nạp sau main.css)
-    │   ├── scripts/              # JS gốc + clone-exam-start.js (script của mình)
-    │   ├── fonts/                # Montserrat + Roboto gốc
-    │   ├── fonts/weup/           # 21 woff2 Fraunces + Be Vietnam Pro (self-host)
-    │   ├── images/               # logo, ảnh câu hỏi (600cau/*.webp), icon
-    │   └── libs/                 # font-awesome, videojs, videojs-markers
-    ├── videos/                   # 120 video mô phỏng (1.mp4 … 120.mp4, ~300 MB)
-    └── uploads/                  # ảnh bài viết
+├── (toàn bộ các file git ở trên)
+├── www/taplaixe.vn/          # WEB ROOT 425 MB (mount read-only vào container) — nội dung = Release v1 + overlay
+│   ├── index.html, <42 trang cấp 1>, bai-viet/ luyen-thi/ (24 trang con)
+│   ├── *__de-<n>.html        # 211 đề thi            ← map ?de=N
+│   ├── *__dethi-<n>.html     # 15 đề mô phỏng        ← map ?dethi=N
+│   ├── *__cau-hoi-<n>.html   # 1150 fragment AJAX    ← map ?cau-hoi=N
+│   ├── *__chuyenmuc-<n>.html # 3 chuyên mục bài viết ← map ?chuyenmuc=N
+│   ├── *__hang-<X>.html      # 7 trang "đề chuẩn"    ← map ?hang=X
+│   ├── assets/styles/main.css        # CSS gốc của site (KHÔNG SỬA)
+│   ├── assets/styles/weup-theme.css  # bản copy của overlay — SỬA Ở REPO RỒI COPY SANG
+│   ├── assets/scripts/               # JS gốc + clone-exam-start.js
+│   ├── assets/fonts/, images/, libs/ # font gốc + weup, ảnh 600cau/*.webp, videojs
+│   ├── videos/ (120 mp4, ~300 MB)
+│   └── uploads/ (ảnh bài viết)
+├── logs/                     # access.log, error.log, forms.log (mount vào /var/log/nginx)
+├── conf/default.conf.bak.*   # backup trước các lần sửa conf
+├── www-html-backup-20261104-210036.tgz   # backup HTML TRƯỚC khi normalize (5 MB) — P3: có thể xoá
+└── mockup/                   # ⚠ file lạ xuất hiện 2026-11-04 22:35 (bien-bao.html + assets), KHÔNG phải của pipeline
+                              #   — chưa commit, chưa rõ ai tạo; hỏi Marshal trước khi xoá/commit
 ```
 
-**Số liệu**: 1451 file HTML (66 trang thật + 211 đề + 15 đề mô phỏng + 1150 fragment + 9 biến thể query),
-120 video, 659 ảnh, 425 MB.
-
-**Không có git repo.** Nếu muốn version hoá: `git init` trong `~/apps/taplai`, thêm `.gitignore`
-(`www/` vì 425 MB — chỉ commit `conf/`, `scripts/`, `README.md`, `HANDOFF.md`, `docker-compose.yml`).
+**Số liệu nội dung**: 2300 file, 425 MB — 1451 HTML (66 trang thật + 211 đề + 15 đề mô phỏng + 1150 fragment
++ 9 biến thể query), 120 video, 659 ảnh. Không có file nào >20 MB.
 
 ---
 
@@ -129,20 +146,37 @@ Nguồn: đo trực tiếp từ https://weup.edu.vn (computed styles + CSS bundl
 
 - Navy `#00203F` · tile `#06305A` · brand red `#990011` (hover `#7A000E`) · đỏ nhạt `#FF8A96` cho chữ trên nền tối
 - Surface `#FFFFFF/#F7F8FA/#EEF2F6` · border `#CBD2D9` · text `#1F2933` · muted `#52606D` · warning `#F2B544`
-- Font: **Fraunces** (serif heading 400) + **Be Vietnam Pro** (UI/body), self-host ở `assets/fonts/weup/`
+- Font: **Fraunces** (serif heading 400) + **Be Vietnam Pro** (UI/body), self-host ở `overlay/assets/fonts/weup/`
 - CTA pill `999px` + shadow `0 10px 30px rgba(153,0,17,.35)`; card radius `22px`
 
-**Quy tắc khi sửa theme**
+**Quy trình sửa theme (đúng thứ tự)**
 
-1. Chỉ sửa `assets/styles/weup-theme.css`. Không sửa `main.css` (rollback = xoá 1 dòng `<link>`).
-2. Sửa xong **bump `?v=N`** trên mọi `<link ... weup-theme.css>` (301 trang) — Cloudflare cache asset 1 giờ.
-   Hiện tại: `?v=13`.
+1. Sửa **`overlay/assets/styles/weup-theme.css` TRONG REPO** (nguồn sự thật) → copy sang
+   `www/taplaixe.vn/assets/styles/weup-theme.css` → **bump `?v=N`** trên mọi `<link ... weup-theme.css>`
+   (301 trang) → commit + push. Cloudflare cache asset 1 giờ; hiện tại `?v=13`.
+2. Không sửa `main.css` (rollback = xoá 1 dòng `<link>`).
 3. Đừng dùng đỏ `#990011` làm màu chữ trên nền navy (1.85:1). Dùng `#FF8A96` (7.3:1).
 4. Trạng thái "đang xem" = navy/trắng, **không** dùng đỏ (đỏ đã mang nghĩa "đã sai").
 
 ---
 
-## 6. Data inventory — cái gì lấy từ đâu
+## 6. Dựng lại từ đầu (đã test 2026-11-04)
+
+```bash
+git clone git@github.com:lekmedev/taplai.git && cd taplai
+bash scripts/deploy.sh
+# → tải Release v1 (390 MB, ~14s @26MB/s) → verify sha256 → giải nén www/ (424 MB)
+# → áp overlay/ (theme WEUP, logo, font, clone-exam-start.js) → docker compose up → curl verify 5 URL
+```
+
+Nếu máy đã có `www/` (máy đang chạy): `SKIP_DOWNLOAD=1 bash scripts/deploy.sh` — chỉ áp overlay + restart.
+
+Đã verify round-trip: clone 41 file → tải 372 MiB/14s → sha256 OK → giải nén 424 MB / 1451 HTML / 120 video
+→ overlay áp thành công (weup-theme.css có mặt).
+
+---
+
+## 7. Data inventory — cái gì lấy từ đâu
 
 | Dữ liệu | Số lượng | Nguồn / cách lấy |
 |---|---|---|
@@ -157,10 +191,11 @@ Số đề/hạng lấy từ `document.CLASS_LIST` trong HTML: A1 10, A 10, B1 1
 
 ---
 
-## 7. Script trong `scripts/` (dùng lại khi cần mirror/ cập nhật)
+## 8. Script trong `scripts/`
 
 | File | Việc |
 |---|---|
+| **`deploy.sh`** | **1 lệnh dựng lại**: tải Release v1 + sha256 + giải nén + áp overlay + compose up + verify (`SKIP_DOWNLOAD=1` = bỏ bước tải) |
 | `audit_mirror.py` | quét cả cây, liệt kê ref nội bộ trỏ tới file không tồn tại |
 | `fetch_missing.py` | tải nốt các file còn thiếu (ảnh/font/video) từ origin |
 | `fetch_de.sh` | tải 211 đề thi (chạy nền bằng `setsid nohup`) |
@@ -172,9 +207,12 @@ Số đề/hạng lấy từ `document.CLASS_LIST` trong HTML: A1 10, A 10, B1 1
 | `bust.py` | thêm `?v=` vào mọi ref css/js trong HTML |
 | `add_tr.py` | thêm router + service Traefik cho `taplai.8biz.net` (idempotent, tự backup) |
 
+Lưu ý: `inject_theme.py` / `inject.py` ghi trực tiếp vào `www/` (hardcode `~/apps/taplai/www/taplaixe.vn`) —
+chúng phục vụ pipeline trên creek; `deploy.sh` gọi lại chúng sau khi giải nén.
+
 ---
 
-## 8. Verify (làm sau MỌI thay đổi)
+## 9. Verify (làm sau MỌI thay đổi)
 
 ```bash
 # 1. HTTP
@@ -198,41 +236,36 @@ Và `Emulation.setDeviceMetricsOverride` còn hiệu lực cho mọi screenshot 
 
 ---
 
-## 9. TODO (việc còn lại, xếp theo giá trị)
+## 10. TODO (việc còn lại, xếp theo giá trị)
 
 ### P1 — nên làm
-1. ~~**Git repo**~~ **ĐÃ XONG 2026-11-04** → https://github.com/lekmedev/taplai (public, branch `main`).
-   Repo chứa `conf/`, `scripts/`, `overlay/` (theme WEUP + logo + font + clone-exam-start.js), `README.md`,
-   `HANDOFF.md`, `docker-compose.yml`; `www/`, `logs/`, `*.tgz`, `conf/*.bak.*` bị ignore.
-   **Nội dung mirror phát hành dạng asset của Release `v1`** (390 MB, `taplai-site-content-v1.tar.gz`,
-   sha256 `8a5e34ef…3e94`); `scripts/deploy.sh` tự tải + verify + giải nén khi thiếu `www/`.
-   Dựng lại ở máy mới: `git clone … && bash scripts/deploy.sh`.
-   Push: `git -C ~/apps/taplai push` (remote SSH, account `lekmedev`).
-   Khi sửa theme: sửa `overlay/assets/styles/weup-theme.css` (nguồn sự thật trong repo) → copy sang
-   `www/...` → bump `?v=` → commit.
-2. **Cron re-mirror** (nếu Marshal muốn nội dung tươi): script chạy `fetch_de.sh` + `fetch_frag.sh` +
+1. **Cron re-mirror** (nếu Marshal muốn nội dung tươi): script chạy `fetch_de.sh` + `fetch_frag.sh` +
    `fetch_missing.py` rồi reload; đề mới = chạy lại `fetch_de.sh` (nó bỏ qua file đã có, muốn đề mới
-   thì xoá `*__de-*.html` của hạng đó trước). Chưa đặt lịch — **hỏi Marshal tần suất**.
-3. **Form liên hệ/tư vấn thật**: hiện chỉ log body. Nếu cần nhận mail → thêm endpoint nhỏ (FastAPI/Node)
+   thì xoá `*__de-*.html` của hạng đó trước) → đóng gói lại tarball → tạo Release mới (v2).
+   Chưa đặt lịch — **hỏi Marshal tần suất**.
+2. **Form liên hệ/tư vấn thật**: hiện chỉ log body. Nếu cần nhận mail → thêm endpoint nhỏ (FastAPI/Node)
    hoặc đẩy vào Google Apps Script / Telegram bot. Log hiện tại ở `logs/forms.log` (format `body="..."`).
 
 ### P2 — tuỳ nhu cầu
-4. **Search bài viết**: form `post-search-bar` (GET `bai-viet.html`) là server-side ở site gốc → trên mirror
+3. **Search bài viết**: form `post-search-bar` (GET `bai-viet.html`) là server-side ở site gốc → trên mirror
    không lọc được. Muốn có thì viết JS filter client-side trên danh sách bài viết.
-5. **Đề mới mỗi lần vào**: hiện đề cố định 1..N. Muốn "random như gốc" thì phải có backend sinh đề
+4. **Đề mới mỗi lần vào**: hiện đề cố định 1..N. Muốn "random như gốc" thì phải có backend sinh đề
    (hoặc JS tự trộn câu từ 600 câu đã có trong `bo-600-...html`).
-6. **Logo**: hiện là wordmark chữ trắng "TAPLAI.8BIZ.NET" (vẽ bằng canvas) + icon vô lăng trắng.
-   Muốn bộ nhận diện riêng thì thay `assets/images/logo.png` (876×152) và `logo-square.png` (48×48) + bump `?v=`.
-7. **Quảng cáo**: đã bỏ hết ads của chủ gốc. Nếu Marshal muốn gắn AdSense account riêng → thêm slot
+5. **Logo/bộ nhận diện riêng**: hiện là wordmark chữ trắng "TAPLAI.8BIZ.NET" (vẽ bằng canvas) + icon vô lăng trắng.
+   Muốn đổi thì thay `overlay/assets/images/logo.png` (876×152) và `logo-square.png` (48×48) trong repo
+   → copy sang `www/` + bump `?v=` ảnh (logo đang là `?v=3`).
+6. **Quảng cáo**: đã bỏ hết ads của chủ gốc. Nếu Marshal muốn gắn AdSense account riêng → thêm slot
    vào các vị trí cũ (đầu trang, giữa danh sách câu, cuối bài viết) + script trong `</head>`.
 
 ### P3 — dọn dẹp
-8. `logs/` đang 632 KB (access log của quét thử) — có thể truncate.
-9. Xoá `www-html-backup-*.tgz` sau khi đã ổn định (5 MB, chỉ là bản trước normalize).
+7. `logs/` đang ~632 KB (access log của quét thử) — có thể truncate.
+8. Xoá `www-html-backup-20261104-210036.tgz` (5 MB) sau khi đã ổn định.
+9. `mockup/` trong `~/apps/taplai/` — file lạ (bien-bao.html, 2026-11-04 22:35, không do pipeline tạo).
+   Hỏi Marshal: giữ, commit hay xoá?
 
 ---
 
-## 10. Decision log (tại sao làm thế này)
+## 11. Decision log (tại sao làm thế này)
 
 | Quyết định | Lý do |
 |---|---|
@@ -243,13 +276,17 @@ Và `Emulation.setDeviceMetricsOverride` còn hiệu lực cho mọi screenshot 
 | Bỏ AdSense/GA/reCAPTCHA | ID của chủ gốc, domain mình không chạy được, và reCAPTCHA sẽ chặn form |
 | Đổi brand sang Taplai (theo yêu cầu Marshal) | Tránh trùng nhận diện với site gốc |
 | Font self-host | Không phụ thuộc fonts.googleapis, tải nhanh, chủ động subset tiếng Việt |
+| **Nội dung qua Release asset, không commit git** | Repo nhẹ (~800 KB, clone nhanh); 425 MB vào git làm mọi clone/pull nặng vĩnh viễn và rất khó gỡ; nội dung là bản quyền taplaixe.vn nhưng Marshal muốn repo tự chứa đủ để dựng lại → Release là điểm giữa, `deploy.sh` tự tải |
+| Overlay/ trong repo thay vì chỉ sửa trong www/ | Repo tự chứa phần "của mình" — www/ có thể xoá và dựng lại 100% từ Release + overlay |
 
 ---
 
-## 11. Checklist cho AI tiếp quản
+## 12. Checklist cho AI tiếp quản
 
-- [ ] Đọc §1–§4, mở `conf/default.conf` và `assets/styles/weup-theme.css`.
-- [ ] Chạy §8 verify để xác nhận baseline trước khi sửa.
-- [ ] Sửa theme → nhớ bump `?v=`; sửa conf → nhớ `docker restart taplai` (không chỉ reload).
-- [ ] Không commit `www/` vào git; không sửa `main.css`.
-- [ ] Hỏi Marshal trước khi: đặt cron, thêm quảng cáo, đổi logo/nhận diện, xoá backup.
+- [ ] Đọc §1–§5; mở `conf/default.conf` và `overlay/assets/styles/weup-theme.css`.
+- [ ] Baseline: chạy `bash scripts/deploy.sh` (SKIP_DOWNLOAD=1 nếu www/ đã có) + §9 verify.
+- [ ] Sửa theme → sửa ở `overlay/` trong repo → copy sang `www/` → bump `?v=` → commit + push.
+- [ ] Sửa conf → nhớ `docker restart taplai` (reload không đủ vì bind-mount 1 file).
+- [ ] Commit nội dung www/ vào git? **KHÔNG** — nội dung đi qua Release.
+- [ ] Không sửa `main.css`.
+- [ ] Hỏi Marshal trước khi: đặt cron re-mirror, thêm quảng cáo, đổi logo/nhận diện, xoá backup, xử lý `mockup/`.
